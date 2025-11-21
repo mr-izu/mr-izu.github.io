@@ -1,20 +1,20 @@
 // endpoint.js
-(function() {
+function getEmailDomains(data) {
   const apiData = {
-    "free": ["gmail.com", "yahoo.com"],
-    "disposable": ["tempmail.com"]
+    "free": ["gmail.com", "yahoo.com", "hotmail.com"],
+    "disposable": ["tempmail.com", "10minutemail.com"],
+    "all": ["gmail.com", "yahoo.com", "hotmail.com", "tempmail.com", "10minutemail.com"]
   };
   
-  // Expose to global scope
-  window.emailDomainsAPI = {
-    get: (type) => apiData[type] || null,
-    data: apiData
-  };
-  
-  // Auto-execute if parameter present
-  const urlParams = new URLSearchParams(window.location.search);
-  const dataParam = urlParams.get('data');
-  if (dataParam && apiData[dataParam]) {
-    window.emailDomainsResult = apiData[dataParam];
-  }
-})();
+  return apiData[data] || {error: "Data not found"};
+}
+
+// Handle the callback
+const urlParams = new URLSearchParams(window.location.search);
+const dataParam = urlParams.get('data');
+const callback = urlParams.get('callback') || 'callback';
+
+// Return the data wrapped in callback
+window[callback] = function() {
+  return getEmailDomains(dataParam);
+};

@@ -1,0 +1,17 @@
+<!-- api.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/gh/littleceo/LittleCeo.github.io@main/endpoint.js"></script>
+</head>
+<body>
+    <script>
+        // Display results on the page
+        if (window.emailDomainsResult) {
+            document.body.innerHTML = JSON.stringify(window.emailDomainsResult);
+        } else {
+            document.body.innerHTML = JSON.stringify({error: "No data parameter provided"});
+        }
+    </script>
+</body>
+</html>

@@ -7,4 +7,5 @@ telegram: https://t.me/xizuru
 github: https://github.com/mr-izu  
 spotify: https://open.spotify.com/user/31hvnpziqycnc4sh76m6ojjq6wdy  
 portfolio: https://izumie.is-a.dev  
-daily.dev: https://app.daily.dev/shxmeem
+daily.dev: https://app.daily.dev/shxmeem  
+meta whitehat: https://www.facebook.com/whitehat/profile/61578725970425/  

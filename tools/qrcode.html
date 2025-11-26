@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator with Logo & Gradient Border</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="url"], input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="url"]:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+        }
+        
+        .reset-btn {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+        
+        .reset-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .preview-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .qr-container {
+            position: relative;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .qr-frame {
+            position: relative;
+            padding: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        #qrcode {
+            padding: 10px;
+            background: white;
+            display: inline-block;
+            border-radius: 8px;
+        }
+        
+        .logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #6a11cb;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .size-control {
+            margin: 15px 0;
+        }
+        
+        .size-control label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .size-control input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .border-controls {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .border-control {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .border-control label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .border-control input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        
+        .gradient-preview {
+            width: 100%;
+            height: 30px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .border-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+    <p class="subtitle">Create custom QR codes with logo & gradient border</p>
+    
+    <div class="container">
+        <div class="input-section">
+            <div class="input-group">
+                <label for="url-input">Enter URL:</label>
+                <input type="url" id="url-input" placeholder="https://example.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="logo-upload">Upload Logo (Optional):</label>
+                <input type="file" id="logo-upload" accept="image/png">
+                <div class="file-info" id="file-info">No file selected</div>
+            </div>
+
+            <div class="size-control">
+                <label for="qr-size">QR Code Size:</label>
+                <input type="number" id="qr-size" min="100" max="500" value="256">
+                <span>pixels (100-500)</span>
+            </div>
+            
+            <div class="border-controls">
+                <div class="border-control">
+                    <label for="border-width">Border Width:</label>
+                    <input type="number" id="border-width" min="5" max="30" value="15">
+                    <span>px</span>
+                </div>
+                
+                <div class="border-control">
+                    <label for="border-color1">Border Color 1:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="color" id="border-color1" value="#6a11cb">
+                        <div class="color-preview" id="color-preview1" style="background: #6a11cb;"></div>
+                    </div>
+                </div>
+                
+                <div class="border-control">
+                    <label for="border-color2">Border Color 2:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="color" id="border-color2" value="#2575fc">
+                        <div class="color-preview" id="color-preview2" style="background: #2575fc;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gradient-preview" id="gradient-preview"></div>
+            
+            <div class="button-group">
+                <button class="generate-btn" id="generate-btn">Generate QR Code</button>
+                <button class="download-btn" id="download-btn" disabled>Download QR Code</button>
+                <button class="reset-btn" id="reset-btn">Reset</button>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <div class="qr-container" id="qr-container">
+                <div class="qr-frame" id="qr-frame">
+                    <div id="qrcode"></div>
+                    <div class="logo-overlay" id="logo-overlay"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <ul>
+                <li>Enter a valid URL in the input field</li>
+                <li>Optionally upload a PNG logo to be placed in the center of the QR code</li>
+                <li>Adjust the QR code size if needed (100-500 pixels)</li>
+                <li>Customize the gradient border with width and colors</li>
+                <li>Click "Generate QR Code" to create your custom QR code</li>
+                <li>Click "Download QR Code" to save the image to your device</li>
+                <li>Use "Reset" to clear the form and start over</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('url-input');
+            const logoUpload = document.getElementById('logo-upload');
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const qrContainer = document.getElementById('qr-container');
+            const qrcodeDiv = document.getElementById('qrcode');
+            const logoOverlay = document.getElementById('logo-overlay');
+            const fileInfo = document.getElementById('file-info');
+            const qrSizeInput = document.getElementById('qr-size');
+            const borderWidthInput = document.getElementById('border-width');
+            const borderColor1Input = document.getElementById('border-color1');
+            const borderColor2Input = document.getElementById('border-color2');
+            const colorPreview1 = document.getElementById('color-preview1');
+            const colorPreview2 = document.getElementById('color-preview2');
+            const gradientPreview = document.getElementById('gradient-preview');
+            const qrFrame = document.getElementById('qr-frame');
+            
+            let logoImage = null;
+            let currentQRCodeSVG = null;
+
+            // Update gradient preview
+            function updateGradientPreview() {
+                const color1 = borderColor1Input.value;
+                const color2 = borderColor2Input.value;
+                gradientPreview.style.background = `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+                colorPreview1.style.background = color1;
+                colorPreview2.style.background = color2;
+            }
+            
+            // Update file info when a file is selected
+            logoUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileInfo.textContent = this.files[0].name;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        logoImage = new Image();
+                        logoImage.src = e.target.result;
+                        logoImage.onload = function() {
+                            // Clear previous logo
+                            logoOverlay.innerHTML = '';
+                            logoOverlay.appendChild(logoImage.cloneNode());
+                        };
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    fileInfo.textContent = 'No file selected';
+                    logoOverlay.innerHTML = '';
+                    logoImage = null;
+                }
+            });
+
+            // Update gradient preview when colors change
+            borderColor1Input.addEventListener('input', updateGradientPreview);
+            borderColor2Input.addEventListener('input', updateGradientPreview);
+            
+            // Initialize gradient preview
+            updateGradientPreview();
+
+            // Generate QR code
+            generateBtn.addEventListener('click', function() {
+                const url = urlInput.value.trim();
+                const size = parseInt(qrSizeInput.value) || 256;
+                const borderWidth = parseInt(borderWidthInput.value) || 15;
+                const color1 = borderColor1Input.value;
+                const color2 = borderColor2Input.value;
+                
+                if (!url) {
+                    alert('Please enter a valid URL');
+                    return;
+                }
+
+                if (size < 100 || size > 500) {
+                    alert('Please enter a size between 100 and 500 pixels');
+                    return;
+                }
+                
+                // Clear previous QR code
+                qrcodeDiv.innerHTML = '';
+                
+                try {
+                    // Generate QR code using the library
+                    const qr = qrcode(0, 'H');
+                    qr.addData(url);
+                    qr.make();
+                    
+                    // Create SVG element
+                    const svgString = qr.createSvgTag({
+                        scalable: true,
+                        margin: 0
+                    });
+                    
+                    // Create a temporary container to parse SVG
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = svgString;
+                    const svgElement = tempDiv.firstChild;
+                    
+                    // Set size
+                    svgElement.setAttribute('width', size);
+                    svgElement.setAttribute('height', size);
+                    svgElement.style.borderRadius = '8px';
+                    
+                    // Add to DOM
+                    qrcodeDiv.appendChild(svgElement);
+                    currentQRCodeSVG = svgElement;
+                    
+                    // Update frame gradient
+                    qrFrame.style.background = `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+                    qrFrame.style.padding = `${borderWidth}px`;
+                    
+                    // Update logo overlay size based on QR code size
+                    const logoSize = Math.max(40, size * 0.15);
+                    logoOverlay.style.width = logoSize + 'px';
+                    logoOverlay.style.height = logoSize + 'px';
+                    
+                    // Show QR container
+                    qrContainer.style.display = 'block';
+                    
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                    
+                    // Scroll to QR code
+                    qrContainer.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    console.error('Error generating QR code:', error);
+                    alert('Error generating QR code. Please try again.');
+                }
+            });
+            
+            // Download QR code
+            downloadBtn.addEventListener('click', function() {
+                if (!currentQRCodeSVG) {
+                    alert('Please generate a QR code first');
+                    return;
+                }
+                
+                const size = parseInt(qrSizeInput.value) || 256;
+                const borderWidth = parseInt(borderWidthInput.value) || 15;
+                const color1 = borderColor1Input.value;
+                const color2 = borderColor2Input.value;
+                
+                // Create canvas for drawing
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const totalSize = size + (borderWidth * 2);
+                canvas.width = totalSize;
+                canvas.height = totalSize;
+                
+                // Draw gradient background
+                const gradient = ctx.createLinearGradient(0, 0, totalSize, totalSize);
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, color2);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, totalSize, totalSize);
+                
+                // Draw white background for QR code
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(borderWidth, borderWidth, size, size);
+                
+                // Convert SVG to data URL and create image
+                const svgString = new XMLSerializer().serializeToString(currentQRCodeSVG);
+                const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+                const svgUrl = URL.createObjectURL(svgBlob);
+                
+                const qrImage = new Image();
+                qrImage.onload = function() {
+                    // Draw QR code
+                    ctx.drawImage(qrImage, borderWidth, borderWidth, size, size);
+                    
+                    // Draw logo if exists
+                    if (logoImage) {
+                        const logoSize = Math.max(40, size * 0.15);
+                        const x = borderWidth + (size - logoSize) / 2;
+                        const y = borderWidth + (size - logoSize) / 2;
+                        
+                        // Draw white background for logo
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(x - 3, y - 3, logoSize + 6, logoSize + 6);
+                        
+                        // Draw logo
+                        ctx.drawImage(logoImage, x, y, logoSize, logoSize);
+                    }
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.download = 'qrcode-with-logo-and-border.png';
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up
+                    URL.revokeObjectURL(svgUrl);
+                };
+                
+                qrImage.src = svgUrl;
+            });
+            
+            // Reset form
+            resetBtn.addEventListener('click', function() {
+                urlInput.value = '';
+                logoUpload.value = '';
+                qrSizeInput.value = '256';
+                borderWidthInput.value = '15';
+                borderColor1Input.value = '#6a11cb';
+                borderColor2Input.value = '#2575fc';
+                fileInfo.textContent = 'No file selected';
+                qrContainer.style.display = 'none';
+                qrcodeDiv.innerHTML = '';
+                logoOverlay.innerHTML = '';
+                logoOverlay.style.width = '60px';
+                logoOverlay.style.height = '60px';
+                downloadBtn.disabled = true;
+                logoImage = null;
+                currentQRCodeSVG = null;
+                updateGradientPreview();
+            });
+        });
+    </script>
+</body>
+</html>
